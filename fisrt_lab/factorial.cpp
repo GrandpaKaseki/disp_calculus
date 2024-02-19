@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <chrono>
 using namespace std;
 
 mutex myMutex;
@@ -28,7 +29,7 @@ int main(){
     int factorial_arg; // target number which used to calculate factorial value
     cout << "\nEnter number\n";
     cin >> factorial_arg;
-
+    auto begin_time = chrono::steady_clock::now();
     int step = factorial_arg / processor_count; // how many numbers will multiply every thread
     unsigned long long result = 1;
 
@@ -54,6 +55,9 @@ int main(){
             t[i].join();
         }
     }
-    cout << result;
+    auto end_time = chrono::steady_clock::now();
+    auto elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end_time - begin_time);
+    cout << "Result:" << result << endl;
+    cout << "Work time:" << elapsed_ms.count()/1000000 << "ms" << endl;
     return 0;
 }
